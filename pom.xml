@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>rs2d-sequence</groupId>
+  <artifactId>sample-mri-ge</artifactId>
+  <version>master</version>
+  <properties>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <seqdev.project-type>MANUAL</seqdev.project-type>
+    <seqdev.update-dependencies>true</seqdev.update-dependencies>
+    <seqdev.use-branch-as-version>true</seqdev.use-branch-as-version>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>rs2d</groupId>
+      <artifactId>rs2d-commons</artifactId>
+      <version>2023.03-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>rs2d</groupId>
+      <artifactId>spinlab</artifactId>
+      <version>2023.03-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.0.2</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+            <manifestEntries>
+              <RS2D-Sequence-Name>Sample MRI GE</RS2D-Sequence-Name>
+              <RS2D-Sequence-File>SampleMriGe.sxml</RS2D-Sequence-File>
+              <RS2D-Sequence-Generator>rs2d.sequence.samplemrige.SampleMriGe</RS2D-Sequence-Generator>
+              <RS2D-Spinlab-Version>2023.03-SNAPSHOT [05/04/2023 09:10]</RS2D-Spinlab-Version>
+              <RS2D-Compiler-Version>2023.03-SNAPSHOT [05/04/2023 09:10]</RS2D-Compiler-Version>
+              <RS2D-Java-Version>17.0.2+8-LTS (OpenJDK Runtime Environment)</RS2D-Java-Version>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <id>with-sources</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.0.2</version>
+            <executions>
+              <execution>
+                <id>copy-resources</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.outputDirectory}/META-INF/src</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>src</directory>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
