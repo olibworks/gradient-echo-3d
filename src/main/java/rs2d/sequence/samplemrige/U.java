@@ -1825,4 +1825,4 @@ public enum U implements GeneratorParamEnum {
     private static List<Number> asListNumber(Number ... numbers) {
         return asList(numbers);
     }
-}
+}

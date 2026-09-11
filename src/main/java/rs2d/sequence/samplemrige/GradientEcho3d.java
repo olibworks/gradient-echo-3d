@@ -36,14 +36,16 @@ import java.util.List;
 
 import static rs2d.sequence.samplemrige.S.*;
 
+
 import static rs2d.sequence.samplemrige.U.*;
+
 
 
 
 // **************************************************************************************************
 // *************************************** SEQUENCE GENERATOR ***************************************
 // **************************************************************************************************
-public class SampleMriGe extends BaseSequenceGenerator {
+public class GradientEcho3d extends BaseSequenceGenerator {
     private static final double MIN_INSTRUCTION_DELAY = 0.000005;     // single instruction minimal duration
 
     private double observeFrequency;
@@ -83,7 +85,7 @@ public class SampleMriGe extends BaseSequenceGenerator {
     private double observation_time;
 
 
-    public SampleMriGe() {
+    public GradientEcho3d() {
         addUserParams();
     }
 

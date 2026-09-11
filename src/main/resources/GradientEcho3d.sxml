@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <sequenceIO>
-    <sequence rxGainTableKey="table0" ifFreqKey="key1" accuDimKey="key2" extTrigModeKey="key224" extTrigSourceKey="key223" dummyScanKey="key30" preScanKey="key3" firCoefSelectedKey="key319" updateDimensionKey="key225" acqTimeModeKey="param0" gradRotPhiKey="key31" gradRotThetaKey="key32" gradRotPsiKey="key33">
+    <sequence rxGainTableKey="table0" ifFreqKey="key1" accuDimKey="key2" extTrigModeKey="key224" extTrigSourceKey="key223" dummyScanKey="key30" preScanKey="key3" firBypassKey="param39" removeDeadPointsKey="param40" updateDimensionKey="key225" acqTimeModeKey="param0" dataTransferKey="param41" gradRotPhiKey="key31" gradRotThetaKey="key32" gradRotPsiKey="key33">
         <acquChannel swKey="key46" nameKey="key45">
             <keyList></keyList>
             <keyList></keyList>
@@ -432,7 +432,7 @@
         <Entry>
             <count>1</count>
             <key>key42</key>
-            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="txElement" offsetKey="key9" phaseKey="key10" ampKey="key11" shapeKey="key12" shapePhaseKey="key0" attKey="key16" phaseModKey="table20" pulseAlignmentModeKey="param34" shapeNameKey="param3" nameKey="key172" enabledKey="key173"/>
+            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="txElement" offsetKey="key9" phaseKey="key10" shapePhaseKey="key0" attKey="key16" phaseModKey="table20" pulseAlignmentModeKey="param34" ampKey="key11" shapeKey="key12" shapeNameKey="param3" nameKey="key172" enabledKey="key173"/>
         </Entry>
         <Entry>
             <count>4</count>
@@ -567,7 +567,7 @@
         <Entry>
             <count>1</count>
             <key>key74</key>
-            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="txElement" offsetKey="key5" phaseKey="key18" ampKey="key25" shapeKey="key31" shapePhaseKey="key33" attKey="key2" phaseModKey="table18" pulseAlignmentModeKey="param32" shapeNameKey="param1" nameKey="key43" enabledKey="key271"/>
+            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="txElement" offsetKey="key5" phaseKey="key18" shapePhaseKey="key33" attKey="key2" phaseModKey="table18" pulseAlignmentModeKey="param32" ampKey="key25" shapeKey="key31" shapeNameKey="param1" nameKey="key43" enabledKey="key271"/>
         </Entry>
         <Entry>
             <count>1</count>
@@ -865,17 +865,17 @@
         <Entry>
             <count>1</count>
             <key>key140</key>
-            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="txElement" offsetKey="key46" phaseKey="key91" ampKey="key92" shapeKey="key93" shapePhaseKey="key94" attKey="key21" phaseModKey="table22" pulseAlignmentModeKey="param36" shapeNameKey="param5" nameKey="key293" enabledKey="key295"/>
+            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="txElement" offsetKey="key46" phaseKey="key91" shapePhaseKey="key94" attKey="key21" phaseModKey="table22" pulseAlignmentModeKey="param36" ampKey="key92" shapeKey="key93" shapeNameKey="param5" nameKey="key293" enabledKey="key295"/>
         </Entry>
         <Entry>
             <count>4</count>
             <key>key142</key>
-            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="txElement" offsetKey="key13" phaseKey="key101" ampKey="key102" shapeKey="key103" shapePhaseKey="key104" attKey="key22" phaseModKey="table23" pulseAlignmentModeKey="param37" shapeNameKey="param6" nameKey="key305" enabledKey="key307"/>
+            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="txElement" offsetKey="key13" phaseKey="key101" shapePhaseKey="key104" attKey="key22" phaseModKey="table23" pulseAlignmentModeKey="param37" ampKey="key102" shapeKey="key103" shapeNameKey="param6" nameKey="key305" enabledKey="key307"/>
         </Entry>
         <Entry>
             <count>1</count>
             <key>key159</key>
-            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="txElement" offsetKey="key82" phaseKey="key111" ampKey="key112" shapeKey="key113" shapePhaseKey="key114" attKey="key27" phaseModKey="table24" pulseAlignmentModeKey="param38" shapeNameKey="param7" nameKey="key315" enabledKey="key317"/>
+            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="txElement" offsetKey="key82" phaseKey="key111" shapePhaseKey="key114" attKey="key27" phaseModKey="table24" pulseAlignmentModeKey="param38" ampKey="key112" shapeKey="key113" shapeNameKey="param7" nameKey="key315" enabledKey="key317"/>
         </Entry>
         <Entry>
             <count>1</count>
@@ -900,12 +900,12 @@
         <Entry>
             <count>1</count>
             <key>key173</key>
-            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="txElement" offsetKey="key51" phaseKey="key52" ampKey="key56" shapeKey="key57" shapePhaseKey="key58" attKey="key19" phaseModKey="table21" pulseAlignmentModeKey="param35" shapeNameKey="param4" nameKey="key534" enabledKey="key535"/>
+            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="txElement" offsetKey="key51" phaseKey="key52" shapePhaseKey="key58" attKey="key19" phaseModKey="table21" pulseAlignmentModeKey="param35" ampKey="key56" shapeKey="key57" shapeNameKey="param4" nameKey="key534" enabledKey="key535"/>
         </Entry>
         <Entry>
             <count>1</count>
             <key>key176</key>
-            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="txElement" offsetKey="key72" phaseKey="key73" ampKey="key75" shapeKey="key76" shapePhaseKey="key78" attKey="key8" phaseModKey="table19" pulseAlignmentModeKey="param33" shapeNameKey="param2" nameKey="key540" enabledKey="key541"/>
+            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="txElement" offsetKey="key72" phaseKey="key73" shapePhaseKey="key78" attKey="key8" phaseModKey="table19" pulseAlignmentModeKey="param33" ampKey="key75" shapeKey="key76" shapeNameKey="param2" nameKey="key540" enabledKey="key541"/>
         </Entry>
         <Entry>
             <count>1</count>
@@ -2126,6 +2126,20 @@
             </value>
         </Entry>
         <Entry>
+            <count>1</count>
+            <key>param39</key>
+            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="booleanParam">
+                <name>FIR_bypass</name>
+                <uuid>57b27c7f-eaeb-4fd9-9719-d07dc3cc3642</uuid>
+                <value>false</value>
+                <defaultValue>false</defaultValue>
+                <description>Bypass FIR filter</description>
+                <displayedName>FIR_bypass</displayedName>
+                <locked>false</locked>
+                <lockedToDefault>false</lockedToDefault>
+            </value>
+        </Entry>
+        <Entry>
             <count>2</count>
             <key>key40</key>
             <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
@@ -2145,6 +2159,20 @@
         </Entry>
         <Entry>
             <count>1</count>
+            <key>param40</key>
+            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="booleanParam">
+                <name>Remove_dead_points</name>
+                <uuid>5c4c5074-b7ae-4cd1-8d4a-34f46091b8be</uuid>
+                <value>false</value>
+                <defaultValue>false</defaultValue>
+                <description>Remove dead points (digital filter)</description>
+                <displayedName>Remove_dead_points</displayedName>
+                <locked>false</locked>
+                <lockedToDefault>false</lockedToDefault>
+            </value>
+        </Entry>
+        <Entry>
+            <count>1</count>
             <key>key41</key>
             <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                 <name>Tx_att</name>
@@ -2159,6 +2187,25 @@
                 <minValue>0.0</minValue>
                 <maxValue>63.0</maxValue>
                 <group>Emission</group>
+            </value>
+        </Entry>
+        <Entry>
+            <count>1</count>
+            <key>param41</key>
+            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
+                <name>DataTransfer</name>
+                <uuid>c709daa6-2c69-4b4e-b6e5-b58eb0006fab</uuid>
+                <value>0</value>
+                <defaultValue>0</defaultValue>
+                <description>Force the size of the packets to be used to transfer the data during the acquisition.</description>
+                <displayedName>Data Transfer</displayedName>
+                <locked>false</locked>
+                <lockedToDefault>false</lockedToDefault>
+                <restrictedToSuggested>false</restrictedToSuggested>
+                <numberEnum>DataPoint</numberEnum>
+                <minValue>0</minValue>
+                <maxValue>32768</maxValue>
+                <category>Acquisition</category>
             </value>
         </Entry>
         <Entry>

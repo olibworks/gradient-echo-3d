@@ -3,8 +3,11 @@
     <name>Sample MRI GE_master</name>
     <description></description>
     <usage></usage>
-    <generatorName>seqdev-temp</generatorName>
+    <generatorName>GRADIENT_ECHO_3D</generatorName>
     <durationTime>0</durationTime>
+    <generationQueue>
+        <enabled>true</enabled>
+    </generationQueue>
     <setUpQueue>
         <enabled>true</enabled>
     </setUpQueue>

@@ -3,8 +3,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>rs2d-sequence</groupId>
-  <artifactId>sample-mri-ge</artifactId>
-  <version>master</version>
+  <artifactId>gradient-echo-3d</artifactId>
+  <version>base</version>
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
@@ -17,12 +17,10 @@
     <dependency>
       <groupId>rs2d</groupId>
       <artifactId>rs2d-commons</artifactId>
-      <version>2023.03-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>rs2d</groupId>
       <artifactId>spinlab</artifactId>
-      <version>2023.03-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <build>
@@ -36,11 +34,11 @@
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
             <manifestEntries>
-              <RS2D-Sequence-Name>Sample MRI GE</RS2D-Sequence-Name>
-              <RS2D-Sequence-File>SampleMriGe.sxml</RS2D-Sequence-File>
-              <RS2D-Sequence-Generator>rs2d.sequence.samplemrige.SampleMriGe</RS2D-Sequence-Generator>
-              <RS2D-Spinlab-Version>2023.03-SNAPSHOT [05/04/2023 09:10]</RS2D-Spinlab-Version>
-              <RS2D-Compiler-Version>2023.03-SNAPSHOT [05/04/2023 09:10]</RS2D-Compiler-Version>
+              <RS2D-Sequence-Name>GRADIENT_ECHO_3D</RS2D-Sequence-Name>
+              <RS2D-Sequence-File>GradientEcho3d.sxml</RS2D-Sequence-File>
+              <RS2D-Sequence-Generator>rs2d.sequence.samplemrige.GradientEcho3d</RS2D-Sequence-Generator>
+              <RS2D-Spinlab-Version>2025.06.1</RS2D-Spinlab-Version>
+              <RS2D-Compiler-Version>2025.06.1</RS2D-Compiler-Version>
               <RS2D-Java-Version>17.0.2+8-LTS (OpenJDK Runtime Environment)</RS2D-Java-Version>
             </manifestEntries>
           </archive>
