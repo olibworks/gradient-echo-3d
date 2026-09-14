@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <application>
-    <name>Sample MRI GE_master</name>
+    <name>GRADIENT_ECHO_3D_base</name>
     <description></description>
     <usage></usage>
-    <generatorName>GRADIENT_ECHO_3D</generatorName>
+    <generatorName>seqdev-temp</generatorName>
     <durationTime>0</durationTime>
     <generationQueue>
         <enabled>true</enabled>
@@ -169,12 +169,12 @@
                 <key>ACCU_DIM</key>
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>ACCU_DIM</name>
-                    <uuid>29fccaf2-1afe-40a6-99e3-d22993c4a2bd</uuid>
+                    <uuid>f4024e91-940c-40f8-9c35-cab7128b2bc7</uuid>
                     <value>1</value>
                     <defaultValue>1</defaultValue>
                     <description>ACCU_DIM.description</description>
                     <displayedName>ACCU_DIM.name</displayedName>
-                    <locked>false</locked>
+                    <locked>true</locked>
                     <lockedToDefault>false</lockedToDefault>
                     <restrictedToSuggested>false</restrictedToSuggested>
                     <numberEnum>Integer</numberEnum>
@@ -189,7 +189,7 @@
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>ACQUISITION_MATRIX_DIMENSION_1D</name>
                     <uuid>19727840-8fc6-4ea4-9e3f-6d4f94b34548</uuid>
-                    <value>256</value>
+                    <value>81</value>
                     <defaultValue>128</defaultValue>
                     <description>The acquisition size of the first dimension</description>
                     <displayedName>Acquisition 1D</displayedName>
@@ -208,7 +208,7 @@
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>ACQUISITION_MATRIX_DIMENSION_2D</name>
                     <uuid>5ef181be-208e-4922-86e1-b93be94d06b2</uuid>
-                    <value>256</value>
+                    <value>80</value>
                     <defaultValue>128</defaultValue>
                     <description>The acquisition size of the second dimension</description>
                     <displayedName>Acquisition 2D</displayedName>
@@ -305,7 +305,7 @@
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>ACQUISITION_TIME_PER_SCAN</name>
                     <uuid>41a8df21-0610-4198-a7ae-bc4ae191c031</uuid>
-                    <value>0.012799180799999999</value>
+                    <value>0.0040497408</value>
                     <defaultValue>1.0</defaultValue>
                     <description>The acquisition time per scan  ( SPECTRAL_WIDTH )</description>
                     <displayedName>Acq Time</displayedName>
@@ -324,7 +324,7 @@
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>BASE_FREQ_1</name>
                     <uuid>875dc91a-96e7-4857-8524-fd8a2b3e9e83</uuid>
-                    <value>6.4E7</value>
+                    <value>2017567.2412297176</value>
                     <defaultValue>1.27552944E8</defaultValue>
                     <description>The base frequency of the first sequence channel</description>
                     <displayedName>Base Freq 1</displayedName>
@@ -437,7 +437,7 @@
                     <name>DIGITAL_FILTER_SHIFT</name>
                     <uuid>0889f37f-b870-4743-a2cb-d04070c239ec</uuid>
                     <value>0</value>
-                    <defaultValue>19</defaultValue>
+                    <defaultValue>34</defaultValue>
                     <description>Data shift due to the digital filter</description>
                     <displayedName>Digital filter shift</displayedName>
                     <locked>true</locked>
@@ -531,7 +531,7 @@
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>FIELD_OF_VIEW</name>
                     <uuid>1aa0b426-8a6a-4892-be05-7944dd76dcd0</uuid>
-                    <value>0.06</value>
+                    <value>0.25</value>
                     <defaultValue>0.6</defaultValue>
                     <description>The field of view</description>
                     <displayedName>FOV</displayedName>
@@ -546,11 +546,30 @@
                 </value>
             </entry>
             <entry>
+                <key>FIELD_OF_VIEW_3D</key>
+                <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
+                    <name>FIELD_OF_VIEW_3D</name>
+                    <uuid>2c03f2bc-33e2-4c99-b2c9-dbbbba593bfb</uuid>
+                    <value>0.25</value>
+                    <defaultValue>0.1</defaultValue>
+                    <description>Info: Field of view coverage along the direction orthogonal to the phase and frequency encoding directions</description>
+                    <displayedName>FOV Slice/3D</displayedName>
+                    <locked>false</locked>
+                    <lockedToDefault>false</lockedToDefault>
+                    <restrictedToSuggested>false</restrictedToSuggested>
+                    <numberEnum>Length</numberEnum>
+                    <minValue>1.0E-4</minValue>
+                    <maxValue>0.5</maxValue>
+                    <group>Dimension</group>
+                    <category>Acquisition</category>
+                </value>
+            </entry>
+            <entry>
                 <key>FIELD_OF_VIEW_PHASE</key>
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>FIELD_OF_VIEW_PHASE</name>
-                    <uuid>e5a53e38-26ce-44a5-9011-6545b6743fc5</uuid>
-                    <value>0.06</value>
+                    <uuid>9d9cd3f7-514e-41fa-a750-4545f24ab27d</uuid>
+                    <value>0.25</value>
                     <defaultValue>0.08</defaultValue>
                     <description>Field of View in the phase encoding direction</description>
                     <displayedName>FIELD_OF_VIEW_PHASE</displayedName>
@@ -559,7 +578,7 @@
                     <restrictedToSuggested>false</restrictedToSuggested>
                     <numberEnum>Length</numberEnum>
                     <minValue>0.01</minValue>
-                    <maxValue>0.1</maxValue>
+                    <maxValue>0.5</maxValue>
                     <group>Dimension</group>
                     <category>Acquisition</category>
                 </value>
@@ -595,6 +614,21 @@
                     <locked>false</locked>
                     <lockedToDefault>false</lockedToDefault>
                     <group>Gradient</group>
+                    <category>Acquisition</category>
+                </value>
+            </entry>
+            <entry>
+                <key>GRADIENT_ENABLE_PHASE_3D</key>
+                <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="booleanParam">
+                    <name>GRADIENT_ENABLE_PHASE_3D</name>
+                    <uuid>593fa0de-c2ff-4da5-b4d0-bb3ac969caab</uuid>
+                    <value>true</value>
+                    <defaultValue>true</defaultValue>
+                    <description>enables second phase encoding gradient</description>
+                    <displayedName>GRADIENT_ENABLE_PHASE_3D</displayedName>
+                    <locked>false</locked>
+                    <lockedToDefault>false</lockedToDefault>
+                    <group>Scan</group>
                     <category>Acquisition</category>
                 </value>
             </entry>
@@ -648,7 +682,7 @@
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>GRADIENT_PHASE_APPLICATION_TIME</name>
                     <uuid>a62eb416-14ba-4f3a-b26e-5fd24883f929</uuid>
-                    <value>3.9999999999999996E-4</value>
+                    <value>0.00163</value>
                     <defaultValue>0.0</defaultValue>
                     <description>the application time of the phase encoding gradient</description>
                     <displayedName>GRADIENT_PHASE_APPLICATION_TIME</displayedName>
@@ -774,8 +808,8 @@
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>MAGNETIC_FIELD_STRENGTH</name>
                     <uuid>4c38c158-986c-47fa-b9bb-d80fdb2200c2</uuid>
-                    <value>1</value>
-                    <defaultValue>1</defaultValue>
+                    <value>0</value>
+                    <defaultValue>0</defaultValue>
                     <description>The magnetic field strength</description>
                     <displayedName>B0</displayedName>
                     <locked>true</locked>
@@ -1480,7 +1514,7 @@
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>OBSERVED_FREQUENCY</name>
                     <uuid>c80ec521-1be2-49fd-b745-5a211ba5d3cd</uuid>
-                    <value>6.4E7</value>
+                    <value>2017567.2412297176</value>
                     <defaultValue>6.3E7</defaultValue>
                     <description>The frequency of the acquisition</description>
                     <displayedName>Observed frequency</displayedName>
@@ -2024,7 +2058,7 @@
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>RECEIVER_GAIN</name>
                     <uuid>f5fc784f-61a4-4f7c-9a84-5f270ca79ed5</uuid>
-                    <value>15.0</value>
+                    <value>40.0</value>
                     <defaultValue>1.0</defaultValue>
                     <description>The receiver gain</description>
                     <displayedName>RG</displayedName>
@@ -2043,7 +2077,7 @@
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>REPETITION_TIME</name>
                     <uuid>a5e3fc86-0316-4515-a149-78ea1fb1fe55</uuid>
-                    <value>0.2</value>
+                    <value>0.08</value>
                     <defaultValue>0.2</defaultValue>
                     <description>The repetition time ( TR )</description>
                     <displayedName>TR</displayedName>
@@ -2058,12 +2092,50 @@
                 </value>
             </entry>
             <entry>
+                <key>RESOLUTION_3D</key>
+                <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
+                    <name>RESOLUTION_3D</name>
+                    <uuid>c214751e-a3b3-4b67-9093-6164011f5276</uuid>
+                    <value>0.0625</value>
+                    <defaultValue>0.0</defaultValue>
+                    <description></description>
+                    <displayedName>RESOLUTION_3D</displayedName>
+                    <locked>true</locked>
+                    <lockedToDefault>false</lockedToDefault>
+                    <restrictedToSuggested>false</restrictedToSuggested>
+                    <numberEnum>Length</numberEnum>
+                    <minValue>0.0</minValue>
+                    <maxValue>1.7976931348623157E308</maxValue>
+                    <group>Scan</group>
+                    <category>Acquisition</category>
+                </value>
+            </entry>
+            <entry>
+                <key>RF_SPOILING_INCREMENT</key>
+                <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
+                    <name>RF_SPOILING_INCREMENT</name>
+                    <uuid>9def5f58-cca2-4341-b286-577860aa8ef7</uuid>
+                    <value>117.0</value>
+                    <defaultValue>117.0</defaultValue>
+                    <description>Quadratic RF phase-increment</description>
+                    <displayedName>RF_SPOILING_INCREMENT</displayedName>
+                    <locked>false</locked>
+                    <lockedToDefault>false</lockedToDefault>
+                    <restrictedToSuggested>false</restrictedToSuggested>
+                    <numberEnum>Angle</numberEnum>
+                    <minValue>0.0</minValue>
+                    <maxValue>360.0</maxValue>
+                    <group>Scan</group>
+                    <category>Acquisition</category>
+                </value>
+            </entry>
+            <entry>
                 <key>SEQUENCE_NAME</key>
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textParam">
                     <name>SEQUENCE_NAME</name>
                     <uuid>01e46ffe-815e-4916-a018-69ce65cbbb69</uuid>
-                    <value>Sample MRI GE</value>
-                    <defaultValue>Sample MRI GE</defaultValue>
+                    <value>GRADIENT_ECHO_3D</value>
+                    <defaultValue>GRADIENT_ECHO_3D</defaultValue>
                     <description>The name of the sequence</description>
                     <displayedName>Seq</displayedName>
                     <locked>true</locked>
@@ -2078,7 +2150,7 @@
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>SEQUENCE_TIME</name>
                     <uuid>dc2d6b86-8bf8-425a-a8cd-138267a9e7b9</uuid>
-                    <value>204.8</value>
+                    <value>25.6</value>
                     <defaultValue>0.0</defaultValue>
                     <description></description>
                     <displayedName>SEQUENCE_TIME</displayedName>
@@ -2096,7 +2168,7 @@
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textParam">
                     <name>SEQUENCE_VERSION</name>
                     <uuid>c59213fe-0279-4336-899e-b81d6cb04151</uuid>
-                    <value>master</value>
+                    <value>base</value>
                     <defaultValue></defaultValue>
                     <description></description>
                     <displayedName>SEQUENCE_VERSION</displayedName>
@@ -2348,11 +2420,11 @@
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>TX_AMP_90</name>
                     <uuid>1e79a1e4-850b-48d6-a4d4-fc81ace0dbb9</uuid>
-                    <value>36.26477397464659</value>
+                    <value>20.0</value>
                     <defaultValue>0.0</defaultValue>
                     <description>Amplitude of the transmitter</description>
                     <displayedName>TX_AMP</displayedName>
-                    <locked>true</locked>
+                    <locked>false</locked>
                     <lockedToDefault>false</lockedToDefault>
                     <restrictedToSuggested>false</restrictedToSuggested>
                     <numberEnum>TxAmp</numberEnum>
@@ -2362,11 +2434,25 @@
                 </value>
             </entry>
             <entry>
+                <key>TX_AMP_ATT_AUTO</key>
+                <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="booleanParam">
+                    <name>TX_AMP_ATT_AUTO</name>
+                    <uuid>f88b0bbf-9d23-4fe4-a142-1287fba001d5</uuid>
+                    <value>false</value>
+                    <defaultValue>true</defaultValue>
+                    <description></description>
+                    <displayedName>TX_AMP_ATT_AUTO</displayedName>
+                    <locked>false</locked>
+                    <lockedToDefault>false</lockedToDefault>
+                    <category>Acquisition</category>
+                </value>
+            </entry>
+            <entry>
                 <key>TX_ATT</key>
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>TX_ATT</name>
                     <uuid>af42f5be-ffe5-44e4-a745-c298f69ab23f</uuid>
-                    <value>53</value>
+                    <value>45</value>
                     <defaultValue>36</defaultValue>
                     <description>Emission attenuation</description>
                     <displayedName>TX_ATT</displayedName>
@@ -2381,11 +2467,35 @@
                 </value>
             </entry>
             <entry>
+                <key>TX_BANDWIDTH_FACTOR_3D</key>
+                <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="listNumberParam">
+                    <name>TX_BANDWIDTH_FACTOR_3D</name>
+                    <uuid>87ec7daa-f592-4f51-8c3f-cb5061171c5a</uuid>
+                    <value>1.1</value>
+                    <value>3.2</value>
+                    <value>5.0</value>
+                    <value>7.3</value>
+                    <defaultValue>1.1</defaultValue>
+                    <defaultValue>3.2</defaultValue>
+                    <defaultValue>5.0</defaultValue>
+                    <defaultValue>7.3</defaultValue>
+                    <description>Bandwidth factor 3D for pulse shapes: 1-HARD, 2-GAUSSIAN, 3-SINC3, 4-SINC5</description>
+                    <displayedName>TX_BANDWIDTH_FACTOR_3D</displayedName>
+                    <locked>true</locked>
+                    <lockedToDefault>false</lockedToDefault>
+                    <numberEnum>Double</numberEnum>
+                    <minValue>-1.7976931348623157E308</minValue>
+                    <maxValue>1.7976931348623157E308</maxValue>
+                    <group>Emission</group>
+                    <category>Acquisition</category>
+                </value>
+            </entry>
+            <entry>
                 <key>TX_LENGTH</key>
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>TX_LENGTH</name>
                     <uuid>f06c5813-a16e-4157-b402-fd29af4ceb42</uuid>
-                    <value>0.001</value>
+                    <value>5.0E-4</value>
                     <defaultValue>0.001</defaultValue>
                     <description>length of RF pulse</description>
                     <displayedName>TX_LENGTH</displayedName>
@@ -2428,7 +2538,12 @@
                     <locked>true</locked>
                     <lockedToDefault>false</lockedToDefault>
                     <restrictedToSuggested>false</restrictedToSuggested>
+                    <suggestedValues>HARD</suggestedValues>
                     <suggestedValues>GAUSSIAN</suggestedValues>
+                    <suggestedValues>SINC3</suggestedValues>
+                    <suggestedValues>SINC5</suggestedValues>
+                    <suggestedValues>SLR_8_5152</suggestedValues>
+                    <suggestedValues>SLR_4_2576</suggestedValues>
                     <group>Emission</group>
                     <category>Acquisition</category>
                 </value>
@@ -2438,7 +2553,7 @@
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>USER_MATRIX_DIMENSION_1D</name>
                     <uuid>01395a80-2c9d-4d56-9ee1-997add782b1f</uuid>
-                    <value>256</value>
+                    <value>81</value>
                     <defaultValue>1</defaultValue>
                     <description></description>
                     <displayedName>USER_ACQUISITION_MATRIX_DIMENSION_1D</displayedName>
@@ -2457,7 +2572,7 @@
                 <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="numberParam">
                     <name>USER_MATRIX_DIMENSION_2D</name>
                     <uuid>ec135937-3a56-44d5-81ce-2b38c7b01c52</uuid>
-                    <value>256</value>
+                    <value>81</value>
                     <defaultValue>1</defaultValue>
                     <description></description>
                     <displayedName>USER_ACQUISITION_MATRIX_DIMENSION_2D</displayedName>

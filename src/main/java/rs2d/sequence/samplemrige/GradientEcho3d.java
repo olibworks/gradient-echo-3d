@@ -12,6 +12,7 @@ package rs2d.sequence.samplemrige;
 
 
 import rs2d.commons.log.Log;
+import rs2d.sequence.common.RFPulse;
 import rs2d.spinlab.api.Hardware;
 import rs2d.spinlab.api.PowerComputation;
 import rs2d.spinlab.data.transformPlugin.TransformPlugin;
@@ -33,6 +34,7 @@ import rs2d.spinlab.tools.utility.Nucleus;
 
 import java.util.ArrayList;
 import java.util.List;
+import static java.util.Arrays.asList;
 
 import static rs2d.sequence.samplemrige.S.*;
 
@@ -65,11 +67,13 @@ public class GradientEcho3d extends BaseSequenceGenerator {
     private int nb_scan_3d;
     private int nb_scan_4d;
 
+    private int manualAtt;
+
     private double spectralWidth;
     private double tr;
     private double te;
 
-    private double sliceThickness;
+    private double fov3d;
     private double fov;
     private double fovPhase;
     private double off_center_distance_1D;
@@ -79,8 +83,11 @@ public class GradientEcho3d extends BaseSequenceGenerator {
     private double txLength90;
 
     private boolean isEnablePhase;
+    private boolean isEnablePhase3D;
     private boolean isEnableSlice;
     private boolean isEnableRead;
+
+    private boolean autoRF;
 
     private double observation_time;
 
@@ -101,6 +108,17 @@ public class GradientEcho3d extends BaseSequenceGenerator {
         TextParam txShape = getParam(TX_SHAPE);
         txShape.setSuggestedValues(List.of("GAUSSIAN"));
         txShape.setRestrictedToSuggested(true);
+
+        // Restrict Lists
+        List<String> tx_shape = asList(
+                "HARD",
+                "GAUSSIAN",
+                "SINC3",
+                "SINC5",
+                "SLR_8_5152",
+                "SLR_4_2576");
+        ((TextParam) getParam(TX_SHAPE)).setSuggestedValues(tx_shape);
+        ((TextParam) getParam(TX_SHAPE)).setRestrictedToSuggested(true);
 
         //TRANSFORM PLUGIN
         TextParam transformPlugin = getParam(TRANSFORM_PLUGIN);
@@ -138,7 +156,7 @@ public class GradientEcho3d extends BaseSequenceGenerator {
         tr = getDouble(REPETITION_TIME);
         te = getDouble(ECHO_TIME);
 
-        sliceThickness = getDouble(SLICE_THICKNESS);
+        fov3d = getDouble(FIELD_OF_VIEW_3D);
         fov = getDouble(FIELD_OF_VIEW);
         fovPhase = getDouble(FIELD_OF_VIEW_PHASE);
         off_center_distance_1D = getDouble(OFF_CENTER_FIELD_OF_VIEW_1D);
@@ -148,6 +166,7 @@ public class GradientEcho3d extends BaseSequenceGenerator {
         txLength90 = getDouble(TX_LENGTH);
 
         isEnablePhase = getBoolean(GRADIENT_ENABLE_PHASE);
+        isEnablePhase3D = getBoolean(GRADIENT_ENABLE_PHASE_3D);
         isEnableSlice = getBoolean(GRADIENT_ENABLE_SLICE);
         isEnableRead = getBoolean(GRADIENT_ENABLE_READ);
 
@@ -210,7 +229,7 @@ public class GradientEcho3d extends BaseSequenceGenerator {
         getParam(FIELD_OF_VIEW_PHASE).setValue(fov_phase);
         // MATRIX
         acquisitionMatrixDimension2D = (int) Math.floor(Math.round(userMatrixDimension2D) / 2.0) * 2;
-        acquisitionMatrixDimension2D = (acquisitionMatrixDimension2D < 4) && isEnablePhase ? 4 : acquisitionMatrixDimension2D;
+        acquisitionMatrixDimension2D = (acquisitionMatrixDimension2D < 4) && isEnablePhase ? 2 : acquisitionMatrixDimension2D;
 
         nb_scan_2d = acquisitionMatrixDimension2D;
 
@@ -220,9 +239,13 @@ public class GradientEcho3d extends BaseSequenceGenerator {
         // MATRIX
 
         //Calculate the number of k-space lines acquired in the 3rd Dimension : acquisitionMatrixDimension3D
-        acquisitionMatrixDimension3D = userMatrixDimension3D;
+        
+        acquisitionMatrixDimension3D = (int) Math.floor(Math.round(userMatrixDimension3D) / 2.0) * 2;
+        acquisitionMatrixDimension3D = (acquisitionMatrixDimension3D < 4) && isEnablePhase3D ? 2 : acquisitionMatrixDimension3D;
         nb_scan_3d = acquisitionMatrixDimension3D;
         getParam(NUMBER_OF_SHOOT_3D).setValue(nb_scan_3d);
+        //Calculate Resulotion for Display
+        getParam(RESOLUTION_3D).setValue(fov3d/acquisitionMatrixDimension3D);
 
         // Pixel dimension calculation
         // -----------------------------------------------
@@ -242,6 +265,7 @@ public class GradientEcho3d extends BaseSequenceGenerator {
         getParam(ACQUISITION_MATRIX_DIMENSION_4D).setValue(acquisitionMatrixDimension4D);
 
         // set the calculated sequence dimensions
+        
         set(Pre_scan, DUMMY_SCAN); // Do the prescan
         set(Nb_point, acquisitionMatrixDimension1D);
         set(Nb_1d, NUMBER_OF_AVERAGES);
@@ -260,7 +284,10 @@ public class GradientEcho3d extends BaseSequenceGenerator {
         //Offset according to ENABLE READ PHASE and SLICE
         off_center_distance_1D = isEnableRead ? off_center_distance_1D : 0;
         off_center_distance_2D = isEnablePhase ? off_center_distance_2D : 0;
-        off_center_distance_3D = isEnableSlice ? off_center_distance_3D : 0;
+        off_center_distance_3D = 0;
+
+		// just 2d off center correction not 3d
+
 
         // MEMORY LIMITATION 2D Shift
         getParam(OFF_CENTER_FIELD_OF_VIEW_3D).setValue(off_center_distance_3D);
@@ -289,8 +316,8 @@ public class GradientEcho3d extends BaseSequenceGenerator {
         // -----------------------------------------------
         set(Grad_enable_read, GRADIENT_ENABLE_READ);              // pass gradient line status to sequence
         set(Grad_enable_phase_2D, isEnablePhase);
-        set(Grad_enable_phase_3D, isEnableSlice);
-        set(Grad_enable_slice, isEnableSlice);
+        set(Grad_enable_phase_3D, isEnablePhase3D);
+        set(Grad_enable_slice, false);
 
         boolean is_grad_spoiler = getBoolean(GRADIENT_ENABLE_SPOILER);// get slice refocussing ratio
         set(Grad_enable_spoiler_slice, is_grad_spoiler);
@@ -320,73 +347,98 @@ public class GradientEcho3d extends BaseSequenceGenerator {
         // -----------------------------------------------
         // Calculation RF pulse parameters  1/3 : Shape
         // -----------------------------------------------
-        int nb_shape_points = 128;
+        double flipAngle = getDouble(FLIP_ANGLE);
+		
+		set(Time_tx, txLength90);
+		
+		RFPulse pulseTX = RFPulse.createRFPulse(
+		        getSequence(),
+		        Tx_att,
+		        Tx_amp,
+		        Tx_phase,
+		        Time_tx,
+		        Tx_shape,
+		        Tx_shape_phase,
+		        Tx_freq_offset,
+		        nucleus
+		);
+		
+		pulseTX.setShape(getText(TX_SHAPE), 128, "Hamming");
 
-        // tx_phase_shape_90
-        Shape tx_shape = getSequenceTable(Tx_shape);
-        generateTable(Tx_shape, "Gaussian", nb_shape_points, 0.25, 100, false);
+		boolean autoRF=getBoolean(TX_AMP_ATT_AUTO);
 
+		if (autoRF) {
+		
+			if (!pulseTX.prepPowerWithFlipAngle(observeFrequency, flipAngle)) {
+			    txLength90 = pulseTX.getPulseDuration();
+			
+			    notifyOutOfRangeParam(
+			            TX_LENGTH,
+			            txLength90,
+			            ((NumberParam) getParam(TX_LENGTH)).getMaxValue(),
+			            "Pulse length too short for the selected RF shape and flip angle"
+			    );
+			
+			    getParam(TX_LENGTH).setValue(txLength90);
+			    set(Time_tx, txLength90);
+			}
 
-        // -----------------------------------------------
-        // Calculation RF pulse parameters  2/3 : RF pulse & attenuation
-        // -----------------------------------------------
-        double flip_angle = getDouble(FLIP_ANGLE);
-        double tx_amp_90;
-        // TX parameters :  TXroute, Probe, Channels
-        List<Integer> txRoute = getListInt(TX_ROUTE); // route TX through Cameleon
+			//Choose attenuation such that this pule uses about 80% of output range
+			
+			pulseTX.prepChannelAttWithPower(
+			        getListInt(TX_ROUTE),
+			        80,
+			        pulseTX.getPower()
+			);
+			
+			pulseTX.prepTxAmp(getListInt(TX_ROUTE));
+			
+			getParam(TX_ATT).setValue(pulseTX.getAtt());
+			getParam(TX_AMP_90).setValue(pulseTX.getAmp());
+			
+			set(Tx_att, pulseTX.getAtt());
+			set(Tx_amp, pulseTX.getAmp());
+		} else {
 
-        double power_factor = Utility.powerFillingFactor(tx_shape);       // get RF pulse power factor from instrument to calculate RF pulse amplitude
-        double instrument_length_90 = PowerComputation.getHardPulse90Width(nucleus.name());
-        double instrument_power_90 = PowerComputation.getHardPulse90Power(nucleus.name()) / power_factor;
-        // Hard pulse calibration for an angle other than 90 can be missing, in such case you can either specify a default value
-        double instrument_length_180 = PowerComputation.getHardPulse180Width(nucleus.name());
-        // or you can throw an exception that stop the compilation and notify the user.
-        double instrument_power_180 = PowerComputation.getHardPulse180Power(nucleus.name()) / power_factor;
-        double power_90 = instrument_power_90 * Math.pow(instrument_length_90 / txLength90, 2);
-        double power_180 = instrument_power_180 * Math.pow(instrument_length_180 / txLength90, 2);
+			// Manual attenuation and amplitude; limit amplitude to safe hardware output.
+		    int manualAtt = getInt(TX_ATT);
+		    pulseTX.prepChannelAtt(manualAtt);
+		
+		    double maxAmp = pulseTX.getAmpLimit(
+		            observeFrequency,
+		            getListInt(TX_ROUTE)
+		    );
+		
+		    double manualAmp = Math.min(getDouble(TX_AMP_90), maxAmp);
+		
+		    if (manualAmp != getDouble(TX_AMP_90)) {
+		        notifyOutOfRangeParam(
+		                TX_AMP_90,
+		                manualAmp,
+		                ((NumberParam) getParam(TX_AMP_90)).getMaxValue(),
+		                "RF amplitude too high for the selected coil and attenuation"
+		        );
+		    }
 
-        if (power_180 > Hardware.getMaxRfPowerPulsed(nucleus.name())) {  // TX LENGTH 90 MIN
-            double tx_length_90_min = Math.ceil(instrument_length_180 / Math.sqrt(Hardware.getMaxRfPowerPulsed(nucleus.name()) / instrument_power_180) * 10000) / 10000.0;
-            notifyOutOfRangeParam(TX_LENGTH, tx_length_90_min, ((NumberParam) getParam(TX_LENGTH)).getMaxValue(), "Pulse length too short to reach RF power with this pulse shape");
-            txLength90 = tx_length_90_min;
-        }
+		    pulseTX.setAmp(manualAmp);
+		
+		    set(Tx_att, manualAtt);
+		    set(Tx_amp, manualAmp);
+		}
 
-        // Calculate Att to get a 180° RF pulse around 80% amp
-        double tx_amp_180_desired = 80;     // set 180° RF puse arround 80% of Chameleon output
-        int tx_att = PowerComputation.getTxAttenuation(txRoute.get(0), power_180, observeFrequency, tx_amp_180_desired);
-
-        // Calculate amp with the new and real Att
-        tx_amp_90 = PowerComputation.getTxAmplitude(txRoute.get(0), power_90, observeFrequency, tx_att);
-
-        // set calculated parameters to display values & sequence
-        this.getParam(TX_ATT).setValue(tx_att);            // display PULSE_ATT
-        this.getParam(TX_AMP_90).setValue(tx_amp_90);     // display 90° amplitude
-        set(Tx_att, tx_att);                   // set PULSE_ATT to sequence
-
-        set(Time_tx, txLength90);
-        set(Tx_amp, tx_amp_90 * flip_angle / 90); // set 90° RF pulse amplitude to sequence
-
+	
         // -----------------------------------------------
         // Calculation RF pulse parameters  3/3: bandwidth
         // -----------------------------------------------
-        double tx_bandwidth_factor_90 = 1.35; // for gaussian pulse
+        //double tx_bandwidth_factor_90 = 1.35; // for gaussian pulse
+        //double tx_bandwidth_90 = tx_bandwidth_factor_90 / txLength90;
+
+        double tx_bandwidth_factor_90 = getTx_bandwidth_factor(TX_SHAPE, TX_BANDWIDTH_FACTOR_3D);
         double tx_bandwidth_90 = tx_bandwidth_factor_90 / txLength90;
 
-        // ---------------------------------------------------------------------
-        // calculate SLICE gradient amplitudes for RF pulses
-        // ---------------------------------------------------------------------
-        double slice_thickness_excitation = sliceThickness;
-        //SLICE gradient amp for 90
-        double grad_amp_slice_slice;
-        grad_amp_slice_slice = (tx_bandwidth_90 / ((GradientMath.GAMMA / nucleus.getRatio()) * slice_thickness_excitation));
-        grad_amp_slice_slice = grad_amp_slice_slice * 100.0 / gMax;
 
-        if (grad_amp_slice_slice > 100) {      // SLICE THICKNESS Limit
-            double slice_thickness_excitation_90_min = (tx_bandwidth_90 / ((GradientMath.GAMMA / nucleus.getRatio()) * gMax));
-            notifyOutOfRangeParam(SLICE_THICKNESS, slice_thickness_excitation_90_min, ((NumberParam) getParam(SLICE_THICKNESS)).getMaxValue(), "Pulse length too short to reach this slice thickness");
-            grad_amp_slice_slice = (tx_bandwidth_90 / ((GradientMath.GAMMA / nucleus.getRatio()) * slice_thickness_excitation)) * 100.0 / gMax;
-        }
-        set(Grad_amp_slice, grad_amp_slice_slice);
+        //Non-selective excitation: the former slice axis is the 3D partition axis.
+        set(Grad_amp_slice,0);
 
         // -----------------------------------------------
         // calculate ADC observation time
@@ -416,12 +468,11 @@ public class GradientEcho3d extends BaseSequenceGenerator {
         // -------------------------------------------------------------------------------------------------
         double grad_phase_application_time = getDouble(GRADIENT_PHASE_APPLICATION_TIME);
 
-        // pre-calculate SLICE_refocusing
-        double grad_ratio_slice_refoc = isEnableSlice ? getDouble(SLICE_REFOCUSING_GRADIENT_RATIO) : 0.0;   // get slice refocussing ratio
-        double grad_area_slice_refoc, grad_area_slice_slice;
-
-        grad_area_slice_slice = (txLength90 + grad_shape_rise_time) * grad_amp_slice_slice;   // area of read gradient %
-        grad_area_slice_refoc = grad_area_slice_slice * grad_ratio_slice_refoc;
+        // The 3D axis is phase encoded; it has no slice-selection or rephasing area.
+        double grad_total_area_phase_3D = ((acquisitionMatrixDimension3D - 1)
+                / ((GradientMath.GAMMA / nucleus.getRatio()) * fov3d)) * 100.0 / gMax;
+        double grad_index_max_phase_3D = 0.5; //symmetric k-space around zero
+        double grad_max_area_phase_3D = grad_index_max_phase_3D * grad_total_area_phase_3D;
 
         // pre-calculate PHASE 2D ENCODING max area
         double grad_ratio_read_prep = getDouble(PREPHASING_READ_GRADIENT_RATIO);      // get prephasing gradient ratio
@@ -437,9 +488,9 @@ public class GradientEcho3d extends BaseSequenceGenerator {
         grad_area_read_read = (observation_time + grad_shape_rise_time) * grad_amp_read_read;   // area of read gradient
         grad_area_read_prep = grad_area_read_read * grad_ratio_read_prep;                       // area of prephasing read gradient
 
-        // Check if enougth time for 2D_PHASE, 3D_PHASE SLICE_REF or READ_PREP
+        // Check whether both phase encoders and the read prephaser fit in the block.
         double grad_area_sequence_max = 100 * (grad_phase_application_time + grad_shape_rise_time);
-        double grad_area_max = Math.max(grad_area_slice_refoc, Math.max(grad_area_read_prep, grad_max_area_phase_2D));            // calculate the maximum gradient aera between SLICE REFOC & READ PREPHASING
+        double grad_area_max = Math.max(grad_max_area_phase_3D, Math.max(grad_area_read_prep, grad_max_area_phase_2D));            // calculate the maximum gradient aera between SLICE REFOC & READ PREPHASING
         if (grad_area_max > grad_area_sequence_max) {
             double grad_phase_application_time_min = grad_area_max / 100.0 - grad_shape_rise_time;
             grad_phase_application_time_min = ceilToSubDecimal(grad_phase_application_time_min, 5);
@@ -451,9 +502,12 @@ public class GradientEcho3d extends BaseSequenceGenerator {
         // Calculate SLICE_REF/3D, PHASE_2D,and READ_PREP Grad Amplitude with correct application_time
         // ------------------------------------------
 
-        // calculate SLICE_refocusing
-        double grad_amp_slice_refoc = grad_area_slice_refoc / (grad_phase_application_time + grad_shape_rise_time);
-        set(Grad_amp_phase_3D, -grad_amp_slice_refoc);
+        // 3D partition encoding
+        double grad_total_amp_phase_3D = grad_total_area_phase_3D / (grad_phase_application_time + grad_shape_rise_time);
+        setTableOrder(Grad_amp_phase_3D, Order.Three);
+        generateTable(Grad_amp_phase_3D, acquisitionMatrixDimension3D,
+                i -> -(grad_index_max_phase_3D * grad_total_amp_phase_3D)
+                        + i * grad_total_amp_phase_3D / (acquisitionMatrixDimension3D - 1));
 
         // calculate PHASE 2D ENCODING Gradient
         double grad_total_amp_phase_2D = grad_total_area_phase_2D / (grad_phase_application_time + grad_shape_rise_time);
@@ -461,6 +515,12 @@ public class GradientEcho3d extends BaseSequenceGenerator {
         generateTable(Grad_amp_phase_2D, acquisitionMatrixDimension2D,
                 i -> -(grad_index_max_phase_2D * grad_total_amp_phase_2D) + i * grad_total_amp_phase_2D / (acquisitionMatrixDimension2D - 1)
         );
+        double rfSpoilingIncrement = getDouble(RF_SPOILING_INCREMENT);
+
+        setTableOrder(Tx_phase, Order.Two);
+        generateTable(Tx_phase, acquisitionMatrixDimension2D,
+                i -> MathUtility.positiveAngle(
+                        rfSpoilingIncrement * i * (i + 1) / 2.0));
 
         // calculate READ_prephasing Gradient
         double grad_amp_read_prep = grad_area_read_prep / (grad_phase_application_time + grad_shape_rise_time);
@@ -521,7 +581,7 @@ public class GradientEcho3d extends BaseSequenceGenerator {
 
         // calculate Slice Spoiler Grad Amplitude
         double grad_amp_spoiler_sl = grad_amp_spoiler_sl_ph_re.get(0);  //%
-        double grad_amp_spoiler_ph = grad_amp_spoiler_sl_ph_re.get(1);  //%
+        double grad_amp_spoiler_ph = grad_amp_spoiler_sl_ph_re.get(0);  //%
         double grad_amp_spoiler_re = grad_amp_spoiler_sl_ph_re.get(2);  //%
 
         set(Grad_amp_spoiler_read, grad_amp_spoiler_re);
@@ -553,63 +613,15 @@ public class GradientEcho3d extends BaseSequenceGenerator {
         // Total Acquisition Time
         // ------------------------------------------------------------------
         int number_of_averages = getInt(NUMBER_OF_AVERAGES);
-        double frame_acquisition_time = number_of_averages * nb_scan_3d * nb_scan_2d * tr;
-        double total_acquisition_time = frame_acquisition_time * nb_scan_4d;
+        int dummyScans = getInt(DUMMY_SCAN);
+        double imagingTime = number_of_averages * nb_scan_3d * nb_scan_2d *nb_scan_4d* tr;
+        double total_acquisition_time = imagingTime + dummyScans * tr;
         getParam(SEQUENCE_TIME).setValue(total_acquisition_time);
 
-        // ------------------------------------------------------------------
-        // calculate TX FREQUENCY offsets tables for multi-slice acquisitions and
-        // ------------------------------------------------------------------
-        double spacing_between_slice = getDouble(SPACING_BETWEEN_SLICE);
-        double grad_amp_slice_mTpm = (tx_bandwidth_90 / ((GradientMath.GAMMA / nucleus.getRatio()) * slice_thickness_excitation));
-        double frequency_center_3D_90 = -grad_amp_slice_mTpm * off_center_distance_3D * (GradientMath.GAMMA / nucleus.getRatio());
-        if (!isEnableSlice) {
-            frequency_center_3D_90 = 0;
-        }
-
-        setTableOrder(Tx_freq_offset, Order.Three);
-        double[] offset_table_90 = new double[acquisitionMatrixDimension3D];
-        if (isEnableSlice) {
-            //MULTI-PLANAR case : calculation of frequency offset table
-            double multi_planar_fov = (acquisitionMatrixDimension3D - 1) * (spacing_between_slice + slice_thickness_excitation);
-            double multi_planar_freq_offset_90 = multi_planar_fov * grad_amp_slice_mTpm * (GradientMath.GAMMA / nucleus.getRatio());
-            double[] tx_frequency_offset_90_table = new double[acquisitionMatrixDimension3D];
-
-            for (int i = 0; i < acquisitionMatrixDimension3D; i++) {
-                double tx_frequency_offset = (multi_planar_freq_offset_90 / 2) - (acquisitionMatrixDimension3D == 1 ? 0 : i * multi_planar_freq_offset_90 / (acquisitionMatrixDimension3D - 1)) + frequency_center_3D_90;
-                tx_frequency_offset_90_table[i] = tx_frequency_offset;
-            }
-
-            // set frequency offet table according to transform plugin
-            for (int k = 0; k < acquisitionMatrixDimension3D; k++) {
-                int[] indexScan = plugin.invTransf(0, 0, k, 0);
-                int sliceNumber = indexScan[0] / (acquisitionMatrixDimension1D) + indexScan[2];
-                offset_table_90[sliceNumber] = tx_frequency_offset_90_table[k];
-            }
-
-            set(Tx_freq_offset, offset_table_90);
-        } else {
-            set(Tx_freq_offset, 0);
-        }
-
-        // ------------------------------------------------------------------
-        // calculate TX FREQUENCY offsets tables for multi-slice acquisitions and
-        // ------------------------------------------------------------------
-        Table freqoffset_tx_prep = getSequenceTable(Freq_offset_tx_prep);
-        Table freqoffset_tx_comp = getSequenceTable(Freq_offset_tx_comp);
-        freqoffset_tx_prep.setOrder(Order.Three);
-        freqoffset_tx_comp.setOrder(Order.Three);
-        freqoffset_tx_prep.clear();
-        freqoffset_tx_comp.clear();
-        if (acquisitionMatrixDimension3D > 1) {
-            for (int k = 0; k < acquisitionMatrixDimension3D; k++) {
-                freqoffset_tx_prep.add(-((offset_table_90[k] * txLength90 / 2.0) % 1) / grad_rise_time);
-                freqoffset_tx_comp.add(-((offset_table_90[k] * txLength90 / 2.0) % 1) / grad_rise_time);
-            }
-        } else {
-            freqoffset_tx_prep.add(-((frequency_center_3D_90 * txLength90 / 2.0) % 1) / grad_rise_time);
-            freqoffset_tx_comp.add(-((frequency_center_3D_90 * txLength90 / 2.0) % 1) / grad_rise_time);
-        }
+        // Non-selective RF has no slice-position frequency compensation.
+        set(Tx_freq_offset, 0);
+        set(Freq_offset_tx_prep, 0);
+        set(Freq_offset_tx_comp, 0);
 
         //----------------------------------------------------------------------
         // OFF CENTER FIELD OF VIEW 1D
@@ -636,18 +648,17 @@ public class GradientEcho3d extends BaseSequenceGenerator {
 
         double deltaPhase_2D = -2 * Math.PI * off_center_distance_2D / (fovPhase);
         //  calculate 2D rx phase table
-        setTableOrder(Rx_phase, Order.Two);
 
-        if (deltaPhase_2D != 0) {
-            double pas_2D = Math.toDegrees(deltaPhase_2D);
-            double index_max_phase_2D = (acquisitionMatrixDimension2D - 1) / 2.0; // symetric k'space around zero
-            generateTable(Rx_phase, acquisitionMatrixDimension2D, i -> {
-                double rx_phase_value = Math.round(MathUtility.positiveAngle(pas_2D * (i - index_max_phase_2D)) * 100.0) / 100.0;
-                return (rx_phase_value == 360) ? 0 : rx_phase_value;
-            });
-        } else {
-            set(Rx_phase, 0);
-        }
+        double pas2D = Math.toDegrees(deltaPhase_2D);
+        double indexMaxPhase2D = (acquisitionMatrixDimension2D - 1) / 2.0;
+
+        setTableOrder(Rx_phase, Order.Two);
+        generateTable(Rx_phase, acquisitionMatrixDimension2D, i -> {
+            double txPhase = rfSpoilingIncrement * i * (i + 1) / 2.0;
+            double offCenterPhase = pas2D * (i - indexMaxPhase2D);
+
+            return MathUtility.positiveAngle(offCenterPhase - txPhase);
+        });
 
         //fill the OFF_CENTER_FIELD_OF_VIEW_EFF User Parameter
         ArrayList<Number> off_center_distanceList = new ArrayList<>();
@@ -668,6 +679,31 @@ public class GradientEcho3d extends BaseSequenceGenerator {
 
     private double ceilToSubDecimal(double numberToBeRounded, double Order) {
         return Math.ceil(numberToBeRounded * Math.pow(10, Order)) / Math.pow(10, Order);
+    }
+
+    private double getTx_bandwidth_factor(U tx_shape, U tx_bandwith_factor_param3d) {
+        double tx_bandwidth_factor;
+
+        List<Double> tx_bandwith_factor_3D_table = getListDouble(tx_bandwith_factor_param3d);
+
+            if ("GAUSSIAN".equalsIgnoreCase(getText(tx_shape))) {
+                tx_bandwidth_factor = tx_bandwith_factor_3D_table.get(1);
+            } else if ("SINC3".equalsIgnoreCase(getText(tx_shape))) {
+                tx_bandwidth_factor = tx_bandwith_factor_3D_table.get(2);
+            } else if ("SINC5".equalsIgnoreCase(getText(tx_shape))) {
+                tx_bandwidth_factor = tx_bandwith_factor_3D_table.get(3);
+            } else if ("RAMP".equalsIgnoreCase(getText(tx_shape))) {
+                tx_bandwidth_factor = tx_bandwith_factor_3D_table.get(3);
+            } else if ("SLR_8_5152".equalsIgnoreCase(getText(tx_shape))) {
+                tx_bandwidth_factor = tx_bandwith_factor_3D_table.get(4);
+            } else if ("SLR_4_2576".equalsIgnoreCase(getText(tx_shape))) {
+                tx_bandwidth_factor = tx_bandwith_factor_3D_table.get(5);
+            } else {
+                tx_bandwidth_factor = tx_bandwith_factor_3D_table.get(0);
+            }
+
+
+        return tx_bandwidth_factor;
     }
 
     private double getOff_center_distance_1D_2D_3D(int dim) {
@@ -714,11 +750,11 @@ public class GradientEcho3d extends BaseSequenceGenerator {
     }
 
     public String getName() {
-        return "Sample MRI GE";
+        return "GRADIENT_ECHO_3D";
     }
 
     public String getVersion() {
-        return "master";
+        return "base";
     }
     //</editor-fold>
 }
