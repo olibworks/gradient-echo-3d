@@ -6,7 +6,7 @@ package rs2d.sequence.samplemrige;
 // ---------------------------------------------------------------------
 //
 // 17/11/2017   V2.2
-//      - TX_LENGTH   TX_SHAPE
+//      - TX_LENGTH   TX_SHAPE Hello
 // Version 2.1 : 31/10/2017
 // Version 2 : 30/10/2017
 
